@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Enum\PermissionsEnum;
 use Illuminate\Database\Seeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\Hash;
 use App\Enum\RolesEnum; // Add this line
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role; // Add this line
@@ -35,14 +36,17 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'User',
             'email' => 'user@example.com',
+            'password' => Hash::make('password123'),
         ])->assignRole(RolesEnum::User);
         User::factory()->create([
             'name' => 'Commenter',
             'email' => 'commenter@example.com',
+            'password' => Hash::make('password123'),
         ])->assignRole(RolesEnum::Commenter);
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
+            'password' => Hash::make('password123'),
         ])->assignRole(RolesEnum::Admin);
     }
 }
