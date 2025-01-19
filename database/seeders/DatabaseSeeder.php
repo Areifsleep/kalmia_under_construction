@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Facades\Hash;
 use App\Enum\RolesEnum; // Add this line
+use App\Models\Feature;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role; // Add this line
 
@@ -48,5 +49,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => Hash::make('password123'),
         ])->assignRole(RolesEnum::Admin);
+
+        Feature::factory(100)->create();
     }
 }
