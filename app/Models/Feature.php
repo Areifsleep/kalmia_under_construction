@@ -13,7 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Feature extends Model
 {
     use HasFactory;
-    
+
+    protected $fillable = [
+        'name',
+        'description',
+        'user_id',
+    ];
+
     public function upvote(): HasMany
     {
         return $this->hasMany(Upvote::class);

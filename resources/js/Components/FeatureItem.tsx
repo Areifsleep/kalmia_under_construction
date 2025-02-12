@@ -1,5 +1,6 @@
 import { Feature } from '@/types';
 import { Button } from '@headlessui/react';
+import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 export default function FeatureItem({ feature }: { feature: Feature }) {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -17,13 +18,13 @@ export default function FeatureItem({ feature }: { feature: Feature }) {
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
-                            stroke-width="1.5"
+                            strokeWidth="1.5"
                             stroke="currentColor"
                             className="size-12"
                         >
                             <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                                 d="m4.5 15.75 7.5-7.5 7.5 7.5"
                             />
                         </svg>
@@ -47,18 +48,29 @@ export default function FeatureItem({ feature }: { feature: Feature }) {
                     </Button>
                 </div>
                 <div className="flex-1">
-                    <h2 className="mb-2 text-2xl">{feature.name}</h2>
-                    <p>
-                        {isExpanded
-                            ? feature.description
-                            : `${feature.description.slice(0, 200)}`}
-                    </p>
-                    <button
-                        onClick={toggleReadmore}
-                        className="text-amber-500 hover:underline"
-                    >
-                        {isExpanded ? 'Read less' : 'Read more'}
-                    </button>
+                    <h2 className="mb-2 text-2xl">
+                        <Link href={route('feature.show', feature)}>
+                            {feature.name}
+                        </Link>
+                    </h2>
+                    {(feature.description || '').length > 200 && (
+                        <>
+                            <p>
+                                {isExpanded
+                                    ? feature.description
+                                    : `${(feature.description || '').slice(0, 200)}`}
+                            </p>
+                            <button
+                                onClick={toggleReadmore}
+                                className="text-amber-500 hover:underline"
+                            >
+                                {isExpanded ? 'Read less' : 'Read more'}
+                            </button>
+                        </>
+                    )}
+                    {(feature.description || '').length <= 200 && (
+                        <p>{feature.description}</p>
+                    )}
                 </div>
             </div>
         </div>
