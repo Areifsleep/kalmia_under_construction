@@ -44,7 +44,7 @@ class FeatureController extends Controller
 
         Feature::create($data);
 
-        return to_route('feature.index')->with('success', 'Feature created.');
+        return to_route('feature.index')->with('success', 'Feature created successfully.');
     }
 
     /**
