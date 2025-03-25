@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\FeatureResource;
 use App\Models\Feature;
+use App\Models\Upvote;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class FeatureController extends Controller
 {
@@ -15,8 +17,24 @@ class FeatureController extends Controller
      */
     public function index()
     {
-        $paginated = Feature::latest()->paginate();
+        $cuurentUserId = Auth::id();
 
+        $paginated = Feature::latest()
+            ->withCount(['upvote as upvote_count' => function($query) {
+                $query->select(DB::raw('SUM(CASE WHEN upvote = 1 THEN 1 ELSE -1 END)'));
+            }])
+            ->withExists([
+                'upvote as user_has_upvoted' => function($query) use ($cuurentUserId) {
+                    $query->where('user_id', $cuurentUserId)
+                        ->where('upvote', 1);
+                },
+                'upvote as user_has_downvoted' => function($query) use ($cuurentUserId) {
+                    $query->where('user_id', $cuurentUserId)
+                        ->where('upvote', 0);
+                }
+                ])
+            ->paginate();
+        
         return Inertia::render('Features/Index', [
             'features' => FeatureResource::collection($paginated),
         ]);
@@ -52,6 +70,18 @@ class FeatureController extends Controller
      */
     public function show(Feature $feature)
     {
+        $feature->upvote_count = Upvote::where('feature_id', $feature->id)
+            ->sum(DB::raw('CASE WHEN upvote = 1 THEN 1 ELSE -1 END'));
+
+        $feature->user_has_upvoted = Upvote::where('feature_id',$feature->id)
+            ->where('user_id', Auth::id())
+            ->where('upvote', 1)
+            ->exists();
+        $feature->user_has_downvoted = Upvote::where('feature_id',$feature->id)
+            ->where('user_id', Auth::id())
+            ->where('upvote', 0)
+            ->exists();
+
         return Inertia::render('Features/Show', [
             'feature' => new FeatureResource($feature),
         ]);
