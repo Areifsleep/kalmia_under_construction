@@ -38,6 +38,15 @@ export default function FeatureItem({ feature }: { feature: Feature }) {
                     {(feature.description || '').length <= 200 && (
                         <p>{feature.description}</p>
                     )}
+
+                    <div className="py-4">
+                        <Link
+                            href={route('feature.show', feature)}
+                            className="focus-ring-4 focus-ring-gray-100 mb-2 me-2 inline-flex gap-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                            Comments
+                        </Link>
+                    </div>
                 </div>
                 <div>
                     <FeatureActionDropdown feature={feature} />
